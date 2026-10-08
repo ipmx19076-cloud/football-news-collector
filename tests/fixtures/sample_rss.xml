@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Sample Football Feed</title>
+    <link>https://example.com/football</link>
+    <description>Synthetic fixture for tests</description>
+    <item>
+      <title>Arsenal edge Spurs in North London derby</title>
+      <link>https://www.example.com/football/arsenal-spurs?utm_source=rss&amp;utm_medium=feed&amp;at_medium=RSS#comments</link>
+      <description><![CDATA[<p>Arsenal beat <b>Tottenham</b> 2-1 &amp; go top.</p><script>alert(1)</script>]]></description>
+      <pubDate>Wed, 08 Oct 2026 14:30:00 +0100</pubDate>
+    </item>
+    <item>
+      <title>Barca confirm new signing</title>
+      <link>https://www.example.com/football/barca-signing</link>
+      <description>No date on this one.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://www.example.com/football/no-title</link>
+      <pubDate>Wed, 08 Oct 2026 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Item without a link</title>
+      <pubDate>Wed, 08 Oct 2026 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Bayern rout Dortmund in Der Klassiker</title>
+      <link>https://example.com/football/bayern-dortmund/</link>
+      <description>Ein klarer Sieg für den FC Bayern München.</description>
+      <pubDate>2026-10-08T09:00:00-04:00</pubDate>
+    </item>
+  </channel>
+</rss>

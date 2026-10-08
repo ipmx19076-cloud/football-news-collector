@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Sample Atom Feed</title>
+  <id>urn:example:feed</id>
+  <updated>2026-10-08T12:00:00Z</updated>
+  <entry>
+    <title>Juventus held by Inter</title>
+    <link href="https://example.org/juve-inter"/>
+    <id>urn:example:1</id>
+    <updated>2026-10-08T12:00:00Z</updated>
+    <summary type="html">&lt;p&gt;Serie A summit ends level.&lt;/p&gt;</summary>
+  </entry>
+</feed>

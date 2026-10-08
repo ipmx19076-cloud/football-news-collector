@@ -1,0 +1,5 @@
+{"status": "ok", "totalResults": 3, "articles": [
+  {"source": {"id": null, "name": "Example Sport"}, "title": "Man Utd sack manager", "description": "<b>Breaking</b> news", "url": "https://example.net/man-utd?utm_campaign=x", "publishedAt": "2026-10-08T07:00:00Z"},
+  {"source": {"id": null, "name": "Removed"}, "title": "[Removed]", "description": null, "url": "https://removed.com", "publishedAt": "1970-01-01T00:00:00Z"},
+  {"source": {"id": null, "name": "No Link"}, "title": "Headline only", "description": "x", "url": null, "publishedAt": "2026-10-08T07:00:00Z"}
+]}

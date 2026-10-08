@@ -1,0 +1,206 @@
+# Football news collector configuration.
+# Secrets never go in this file: API sources name the *environment variable*
+# that holds the key (api_key_env), and the key itself lives in your shell
+# or in a GitHub Actions secret.
+# Relative paths are resolved against the current working directory
+# (run commands from the repository root).
+
+user_agent: "football-news-collector/0.1 (personal RSS reader; python-httpx)"
+
+network:
+  default_timeout: 15        # seconds per request
+  max_retries: 2             # retries after the first attempt (timeouts, 5xx, 429)
+  backoff_base: 2.0          # wait = backoff_base ** attempt seconds
+  per_host_delay: 2.0        # minimum seconds between requests to the same host
+  max_retry_after: 30        # honour 429 Retry-After up to this many seconds, else skip for the day
+  respect_robots: true       # check robots.txt before fetching feed URLs
+
+storage:
+  db_path: data/football_news.db
+  export_dir: data/exports
+
+logging:
+  dir: logs
+  level: INFO
+
+summary_max_chars: 280
+
+# Same story from different sources: see football_news/dedup.py for the full rule.
+dedup:
+  window_hours: 36           # only compare items published within +/- this many hours
+  jaccard_threshold: 0.8     # shared-word overlap of normalized headlines
+  ratio_threshold: 0.9       # character similarity of normalized headlines
+  min_tokens: 4              # shorter headlines must match exactly
+
+# Daily Markdown digest of items first collected on a UTC day, grouped by league.
+digest:
+  enabled: true
+  output_dir: data/digests
+
+# League/club tagging. Matching is case- and accent-insensitive on whole words.
+# `exclude` phrases are blanked out before that entry's keywords are checked.
+# A club adds its `league` tag. Promotion/relegation: edit club leagues each season.
+# After editing, run `python -m football_news retag` to re-tag stored items.
+tagging:
+  default_tag: Other/General
+  match_fields: [headline, summary]
+  leagues:                   # order here = section order in the digest
+    Premier League:
+      keywords: [premier league, epl]
+      exclude: [hong kong premier league, scottish premier league, canadian premier league,
+                indian premier league, egyptian premier league, premier league 2,
+                south african premier league, ghana premier league, israeli premier league,
+                ukrainian premier league, russian premier league, women's premier league]
+    La Liga:
+      keywords: [la liga, laliga]
+    Serie A:
+      keywords: [serie a]
+    Bundesliga:
+      keywords: [bundesliga]
+      exclude: [2. bundesliga, austrian bundesliga, frauen bundesliga]
+    Ligue 1:
+      keywords: [ligue 1, ligue un]
+    Scottish Premiership:
+      keywords: [scottish premiership, scot prem, spfl]
+    Champions League:
+      keywords: [champions league, ucl]
+      exclude: [afc champions league, caf champions league, concacaf champions league,
+                women's champions league]
+    Europa League:
+      keywords: [europa league]
+    Conference League:
+      keywords: [conference league]
+    Women's football:
+      keywords: [wsl, women's super league, women's champions league, lionesses, uswnt,
+                 nwsl, women's world cup, women's euro]
+    International:
+      keywords: [world cup, nations league, euro 2028, international break, world cup qualifier]
+      exclude: [club world cup, women's world cup]
+
+  clubs:
+    # Premier League
+    Arsenal:           {league: Premier League, keywords: [arsenal, gunners]}
+    Aston Villa:       {league: Premier League, keywords: [aston villa]}
+    Chelsea:           {league: Premier League, keywords: [chelsea]}
+    Everton:           {league: Premier League, keywords: [everton, toffees]}
+    Liverpool:         {league: Premier League, keywords: [liverpool]}
+    Manchester City:   {league: Premier League, keywords: [manchester city, man city]}
+    Manchester United: {league: Premier League, keywords: [manchester united, man utd, man united]}
+    Newcastle United:  {league: Premier League, keywords: [newcastle united, newcastle]}
+    Tottenham:         {league: Premier League, keywords: [tottenham, spurs]}
+    West Ham:          {league: Premier League, keywords: [west ham]}
+    Brighton:          {league: Premier League, keywords: [brighton]}
+    # La Liga
+    Real Madrid:       {league: La Liga, keywords: [real madrid]}
+    Barcelona:         {league: La Liga, keywords: [barcelona, barca, barça]}
+    Atletico Madrid:   {league: La Liga, keywords: [atletico madrid, atlético madrid, atleti]}
+    Sevilla:           {league: La Liga, keywords: [sevilla]}
+    Real Sociedad:     {league: La Liga, keywords: [real sociedad]}
+    Athletic Club:     {league: La Liga, keywords: [athletic club, athletic bilbao]}
+    Villarreal:        {league: La Liga, keywords: [villarreal]}
+    # Serie A
+    Juventus:          {league: Serie A, keywords: [juventus, juve]}
+    Inter:             {league: Serie A, keywords: [inter milan, internazionale, inter],
+                        exclude: [inter miami]}
+    AC Milan:          {league: Serie A, keywords: [ac milan, milan],
+                        exclude: [inter milan]}
+    Napoli:            {league: Serie A, keywords: [napoli]}
+    Roma:              {league: Serie A, keywords: [as roma, roma]}
+    Lazio:             {league: Serie A, keywords: [lazio]}
+    Atalanta:          {league: Serie A, keywords: [atalanta]}
+    # Bundesliga
+    Bayern Munich:     {league: Bundesliga, keywords: [bayern munich, bayern]}
+    Borussia Dortmund: {league: Bundesliga, keywords: [borussia dortmund, dortmund, bvb]}
+    Bayer Leverkusen:  {league: Bundesliga, keywords: [bayer leverkusen, leverkusen]}
+    RB Leipzig:        {league: Bundesliga, keywords: [rb leipzig, leipzig]}
+    # Ligue 1
+    Paris Saint-Germain: {league: Ligue 1, keywords: [paris saint-germain, paris st-germain, psg]}
+    Marseille:         {league: Ligue 1, keywords: [marseille]}
+    Lyon:              {league: Ligue 1, keywords: [olympique lyonnais, lyon]}
+    Monaco:            {league: Ligue 1, keywords: [as monaco]}
+    # Scottish Premiership
+    Celtic:            {league: Scottish Premiership, keywords: [celtic]}
+    Rangers:           {league: Scottish Premiership, keywords: [rangers],
+                        exclude: [queens park rangers, qpr, raith rovers, berwick rangers]}
+
+sources:
+  # ---- Verified RSS feeds (checked 2026-10-08: HTTP 200, valid RSS, robots.txt allows) ----
+  - name: BBC Sport Football
+    type: rss
+    url: https://feeds.bbci.co.uk/sport/football/rss.xml
+    enabled: true
+    max_items: 50
+
+  - name: ESPN FC
+    type: rss
+    url: https://www.espn.com/espn/rss/soccer/news
+    enabled: true
+    max_items: 50
+    # ESPN labels US Eastern local time as "EST" year-round; read it as America/New_York.
+    assume_timezone: America/New_York
+
+  - name: Sky Sports Football
+    type: rss
+    url: https://www.skysports.com/rss/11095
+    enabled: true
+    max_items: 50
+
+  - name: The Guardian Football
+    type: rss
+    url: https://www.theguardian.com/football/rss
+    enabled: true
+    max_items: 50
+
+  - name: FourFourTwo
+    type: rss
+    url: https://www.fourfourtwo.com/feeds/all
+    enabled: true
+    max_items: 50
+
+  - name: Mirror Football
+    type: rss
+    url: https://www.mirror.co.uk/sport/football/?service=rss
+    enabled: true
+    max_items: 50
+
+  # Verified but off by default (US-focused coverage). Set enabled: true to use it.
+  - name: CBS Sports Soccer
+    type: rss
+    url: https://www.cbssports.com/rss/headlines/soccer/
+    enabled: false
+    max_items: 50
+
+  # Rejected on 2026-10-08, kept here as a note so they are not re-added blindly:
+  #   Goal (goal.com/feeds/en/news)        - TLS handshake fails over HTTPS; HTTP returns 503
+  #   90min (90min.com/posts.rss)          - feed frozen; newest item is from Sep 2025
+  #   The Independent (.../football/rss)   - answers HTTP 405 to this client (bot protection); not bypassed
+  #   talkSPORT (talksport.com/football/feed/) - robots.txt disallows the feed URL
+  #   Football365 (football365.com/feed)   - HTTP 404
+
+  # ---- Optional API sources: skipped with an INFO message when the key is not set ----
+  - name: NewsAPI
+    type: newsapi
+    enabled: true
+    api_key_env: NEWSAPI_KEY
+    max_items: 50            # one request per run (free tier: 100 requests/day)
+    query: '(football OR soccer) AND ("Premier League" OR "Champions League" OR "La Liga" OR "Serie A" OR "Bundesliga" OR "Ligue 1" OR transfer)'
+    language: en
+
+  - name: GNews
+    type: gnews
+    enabled: true
+    api_key_env: GNEWS_API_KEY
+    max_items: 10            # free tier caps results per request at 10; one request per run
+    query: 'football OR soccer'
+    language: en
+
+  # ---- Reddit via the official OAuth API only (no HTML scraping). Disabled by default. ----
+  - name: Reddit r/soccer
+    type: reddit
+    enabled: false
+    subreddit: soccer
+    listing: hot             # hot | new | top
+    max_items: 50
+    client_id_env: REDDIT_CLIENT_ID
+    client_secret_env: REDDIT_CLIENT_SECRET
+    user_agent_env: REDDIT_USER_AGENT   # Reddit asks for "<platform>:<app id>:<version> (by /u/<you>)"

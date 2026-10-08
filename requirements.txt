@@ -1,0 +1,5 @@
+# Runtime dependencies (pinned). Python 3.11+.
+feedparser==6.0.14
+httpx==0.28.1
+python-dateutil==2.9.0.post0
+PyYAML==6.0.3

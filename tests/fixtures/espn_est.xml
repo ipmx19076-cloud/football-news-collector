@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>ESPN-like</title>
+<item><title>Summer story labelled EST</title><link>https://example.com/a</link>
+<pubDate>Thu, 8 Oct 2026 08:51:09 EST</pubDate></item>
+<item><title>Winter story labelled EST</title><link>https://example.com/b</link>
+<pubDate>Tue, 8 Dec 2026 08:51:09 EST</pubDate></item>
+</channel></rss>
