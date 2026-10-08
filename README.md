@@ -14,12 +14,12 @@ Verified on 2026-10-08 (HTTP 200, valid feed, robots.txt allows the feed URL):
 | Source | Type | Default |
 |---|---|---|
 | BBC Sport Football | RSS | on |
-| ESPN FC | RSS (times read as America/New_York, see `assume_timezone`) | on |
 | Sky Sports Football | RSS | on |
 | The Guardian Football | RSS | on |
 | FourFourTwo | RSS | on |
 | Mirror Football | RSS | on |
-| CBS Sports Soccer | RSS | off |
+| CBS Sports Soccer | RSS | on |
+| ESPN FC | RSS (times read as America/New_York, see `assume_timezone`) | off: returned an empty feed to GitHub Actions runners |
 | NewsAPI | API, needs `NEWSAPI_KEY` | on, skipped without key |
 | GNews | API, needs `GNEWS_API_KEY` | on, skipped without key |
 | Reddit r/soccer | Official OAuth API only, needs credentials | off |

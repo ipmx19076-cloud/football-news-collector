@@ -131,10 +131,12 @@ sources:
     enabled: true
     max_items: 50
 
+  # Disabled 2026-10-08: returned an empty feed (HTTP 200, 0 items) to GitHub Actions
+  # runners while working from a home connection. Replaced by CBS Sports Soccer.
   - name: ESPN FC
     type: rss
     url: https://www.espn.com/espn/rss/soccer/news
-    enabled: true
+    enabled: false
     max_items: 50
     # ESPN labels US Eastern local time as "EST" year-round; read it as America/New_York.
     assume_timezone: America/New_York
@@ -163,11 +165,10 @@ sources:
     enabled: true
     max_items: 50
 
-  # Verified but off by default (US-focused coverage). Set enabled: true to use it.
   - name: CBS Sports Soccer
     type: rss
     url: https://www.cbssports.com/rss/headlines/soccer/
-    enabled: false
+    enabled: true
     max_items: 50
 
   # Rejected on 2026-10-08, kept here as a note so they are not re-added blindly:
